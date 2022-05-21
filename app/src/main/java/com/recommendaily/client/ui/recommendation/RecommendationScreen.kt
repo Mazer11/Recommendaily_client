@@ -1,0 +1,38 @@
+package com.recommendaily.client.ui.recommendation
+
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
+import com.recommendaily.client.R
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RecommendationScreen(navController: NavController) {
+    Scaffold(
+        topBar = {
+            SmallTopAppBar(
+                title = { Text(text = "Recommendations") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigateUp() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_back),
+                            contentDescription = null
+                        )
+                    }
+                }
+            )
+        }
+    ) {
+        Surface(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+        ) {
+
+        }
+    }
+}
