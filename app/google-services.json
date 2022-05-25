@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "842532051938",
+    "project_id": "recommendaily",
+    "storage_bucket": "recommendaily.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:842532051938:android:675fe6bd4ac3007208f7bb",
+        "android_client_info": {
+          "package_name": "com.recommendaily.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "842532051938-lmvkfgvetnuqhl9m6qjqvsmfqpncpb4k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQXo5sd_QjLcVxLfAqhAIhLk2Aod65lLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "842532051938-lmvkfgvetnuqhl9m6qjqvsmfqpncpb4k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
