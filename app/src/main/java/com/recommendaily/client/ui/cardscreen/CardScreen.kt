@@ -1,23 +1,35 @@
 package com.recommendaily.client.ui.cardscreen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.recommendaily.client.R
 import com.recommendaily.client.ui.navigation.components.NavRoots
 import com.recommendaily.client.ui.theme.AppTypography
-import kotlin.random.Random
+import com.recommendaily.client.viewmodel.CardScreenVM
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CardScreen(navController: NavController) {
+fun CardScreen(navController: NavController, vm: CardScreenVM = CardScreenVM()) {
+    val data = vm.getData()
+
+    // This row simulates a loaded data for 1 card
+    // Will move later
+    val item = data[0]
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -91,6 +103,8 @@ fun CardScreen(navController: NavController) {
                 }
             }
 
+            Spacer(modifier = Modifier.height(50.dp))
+
             //Card
             ElevatedCard(
                 modifier = Modifier
@@ -105,17 +119,31 @@ fun CardScreen(navController: NavController) {
                         .fillMaxWidth()
                         .padding(8.dp)
                 ) {
-                    Text(text = "Title", style = AppTypography.displaySmall)
-                    Text(text = "Subtitle", style = AppTypography.titleSmall)
+                    Text(text = item.title, style = AppTypography.displaySmall)
+                    Text(text = item.subtitle, style = AppTypography.titleSmall)
                 }
 
                 //Image
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp),
+                        .height(215.dp),
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 ) {
+
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(vm.getImageUrl(item.id))
+                                .error(R.drawable.ic_launcher_foreground)
+                                .crossfade(false)
+                                .build(),
+                            filterQuality = FilterQuality.Low,
+                            contentScale = ContentScale.FillBounds
+                        ),
+                        contentDescription = null,
+                        contentScale = ContentScale.FillBounds
+                    )
 
                 }
 
@@ -125,27 +153,27 @@ fun CardScreen(navController: NavController) {
                         .fillMaxWidth()
                         .padding(8.dp)
                 ) {
-                    Text(text = "Release date")
+                    Text(text = item.release_date)
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Box {
-                            Text(text = "rate%")
+                            Text(text = item.popularity)
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_rate),
                                 contentDescription = null,
                                 modifier = Modifier.padding(start = 45.dp)
                             )
                         }
-                        Text(text = "players amount")
-                        Text(text = "price$")
+                        Text(text = item.user_count)
+                        Text(text = item.price)
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(text = "An online and local party game of teamwork and betrayal for 4-10 players...in space! About This GamePlay with 4-10 player online or via local WiFi as you attempt to prepare your spacesh")
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
+
+            Spacer(modifier = Modifier.height(30.dp))
 
             //Footer Button
             ExtendedFloatingActionButton(onClick = { /*TODO*/ }) {
@@ -159,36 +187,3 @@ fun CardScreen(navController: NavController) {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -4,9 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.recommendaily.client.ui.cardscreen.CardScreen
 import com.recommendaily.client.ui.navigation.NavGraph
 import com.recommendaily.client.ui.theme.Recommendailytheme
 
