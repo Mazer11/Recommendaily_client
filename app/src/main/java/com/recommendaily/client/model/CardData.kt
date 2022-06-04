@@ -6,6 +6,7 @@ data class CardData(
     val subtitle: String,
     val release_date: String,
     val popularity: String,
+    val developer: String,
     val user_count: String,
     val price: String,
     val description: String,

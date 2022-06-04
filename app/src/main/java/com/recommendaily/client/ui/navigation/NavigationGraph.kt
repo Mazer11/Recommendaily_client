@@ -11,11 +11,13 @@ import com.recommendaily.client.ui.cardscreen.CardScreen
 import com.recommendaily.client.ui.navigation.components.NavRoots
 import com.recommendaily.client.ui.recommendation.RecommendationScreen
 import com.recommendaily.client.ui.settings.SettingsScreen
+import com.recommendaily.client.viewmodel.CardScreenVM
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: CardScreenVM
 ) {
     val animDuration = 400
     AnimatedNavHost(
@@ -57,7 +59,7 @@ fun NavGraph(
                 }
             }
         ) {
-            CardScreen(navController = navController)
+            CardScreen(navController = navController, vm = viewModel)
         }
 
         composable(
