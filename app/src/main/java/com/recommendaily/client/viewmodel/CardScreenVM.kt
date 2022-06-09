@@ -1,14 +1,10 @@
 package com.recommendaily.client.viewmodel
 
-import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.runtime.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.storage.FirebaseStorage
-import com.recommendaily.client.DownloadImagesUrlsCallback
 import com.recommendaily.client.model.CardData
-import kotlinx.coroutines.launch
 
 class CardScreenVM : ViewModel() {
 
@@ -17,38 +13,18 @@ class CardScreenVM : ViewModel() {
      */
     private val storageRef = FirebaseStorage.getInstance().reference
 
-    private val imagesUrl = mutableListOf<String>()
-
-    private val cardData = mutableListOf<CardData>()
+    private val _cardData = MutableLiveData<MutableList<CardData>>()
+    val cardData: LiveData<MutableList<CardData>> = _cardData
 
     init {
-        cardData.addAll(provideCardInfo())
-    }
-
-    fun getCardsData(): List<CardData> {
-        return cardData
-    }
-
-    fun getImages(): List<String> {
-        imagesUrl.add("https://steamcdn-a.akamaihd.net/steam/apps/945360/header.jpg?t=1598556351")
-        imagesUrl.add("https://steamcdn-a.akamaihd.net/steam/apps/730/header.jpg?t=1592263625")
-        imagesUrl.add("https://steamcdn-a.akamaihd.net/steam/apps/1097150/header_alt_assets_0.jpg?t=1602172542")
-        imagesUrl.add("https://steamcdn-a.akamaihd.net/steam/apps/1158310/header.jpg?t=1602596444")
-        imagesUrl.add("https://steamcdn-a.akamaihd.net/steam/apps/1085660/header.jpg?t=1598982557")
-        imagesUrl.add("https://steamcdn-a.akamaihd.net/steam/apps/1145360/header.jpg?t=1601510167")
-        imagesUrl.add("https://steamcdn-a.akamaihd.net/steam/apps/1172620/header.jpg?t=1596057038")
-        imagesUrl.add("https://steamcdn-a.akamaihd.net/steam/apps/359550/header.jpg?t=1602605478")
-        imagesUrl.add("https://steamcdn-a.akamaihd.net/steam/apps/359550/header.jpg?t=1602605478")
-        imagesUrl.add("https://steamcdn-a.akamaihd.net/steam/apps/230410/header.jpg?t=1601568920")
-
-        return imagesUrl
+        _cardData.value = provideCardInfo()
     }
 
     /**
      * Gets data from server
      */
-    private fun provideCardInfo(): List<CardData> {
-        val mList = mutableListOf(
+    private fun provideCardInfo(): MutableList<CardData> {
+        return mutableListOf(
             CardData(
                 id = 0,
                 title = "Among Us",
@@ -59,6 +35,7 @@ class CardScreenVM : ViewModel() {
                 user_count = "151,281",
                 price = "4.99\$",
                 description = "Crusader Kings 3 — компьютерная игра в жанре глобальной стратегии в реальном времени, разрабатываемая студией Paradox Interactive.",
+                imageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/945360/header.jpg?t=1598556351"
             ),
             CardData(
                 id = 1,
@@ -70,6 +47,7 @@ class CardScreenVM : ViewModel() {
                 user_count = "90,780",
                 price = "Free",
                 description = "Destiny 2 — компьютерная игра в жанре шутера от первого лица с элементами MMORPG, разработанная американской компанией Bungie.",
+                imageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/730/header.jpg?t=1592263625"
             ),
             CardData(
                 id = 2,
@@ -81,6 +59,7 @@ class CardScreenVM : ViewModel() {
                 user_count = "32,436",
                 price = "19.99\$",
                 description = "Destiny 2 — компьютерная игра в жанре шутера от первого лица с элементами MMORPG, разработанная американской компанией Bungie.",
+                imageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/1097150/header_alt_assets_0.jpg?t=1602172542"
             ),
             CardData(
                 id = 3,
@@ -92,6 +71,7 @@ class CardScreenVM : ViewModel() {
                 user_count = "5,359",
                 price = "49.99\$",
                 description = "Crusader Kings 3 — компьютерная игра в жанре глобальной стратегии в реальном времени, разрабатываемая студией Paradox Interactive.",
+                imageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/1158310/header.jpg?t=1602596444"
             ),
             CardData(
                 id = 4,
@@ -103,8 +83,8 @@ class CardScreenVM : ViewModel() {
                 user_count = "17,940",
                 price = "24.99\$",
                 description = "Destiny 2 — компьютерная игра в жанре шутера от первого лица с элементами MMORPG, разработанная американской компанией Bungie.",
-
-                ),
+                imageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/1085660/header.jpg?t=1598982557"
+            ),
             CardData(
                 id = 5,
                 title = "Destiny 2",
@@ -115,6 +95,7 @@ class CardScreenVM : ViewModel() {
                 user_count = "284,689",
                 price = "Free",
                 description = "Destiny 2 — компьютерная игра в жанре шутера от первого лица с элементами MMORPG, разработанная американской компанией Bungie.",
+                imageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/1145360/header.jpg?t=1601510167"
             ),
             CardData(
                 id = 6,
@@ -126,6 +107,7 @@ class CardScreenVM : ViewModel() {
                 user_count = "4,703",
                 price = "39.99\$",
                 description = "Destiny 2 — компьютерная игра в жанре шутера от первого лица с элементами MMORPG, разработанная американской компанией Bungie.",
+                imageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/1172620/header.jpg?t=1596057038"
             ),
             CardData(
                 id = 7,
@@ -137,17 +119,7 @@ class CardScreenVM : ViewModel() {
                 user_count = "14,261",
                 price = "19.99\$",
                 description = "Destiny 2 — компьютерная игра в жанре шутера от первого лица с элементами MMORPG, разработанная американской компанией Bungie.",
-            ),
-            CardData(
-                id = 8,
-                title = "Dota 2",
-                subtitle = "Steam Trading CardsSteam WorkshopSteamVR",
-                release_date = "Jul 9, 2013",
-                popularity = "79%",
-                developer = "Valve",
-                user_count = "14,202",
-                price = "Free",
-                description = "Destiny 2 — компьютерная игра в жанре шутера от первого лица с элементами MMORPG, разработанная американской компанией Bungie.",
+                imageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/359550/header.jpg?t=1602605478"
             ),
             CardData(
                 id = 9,
@@ -159,28 +131,28 @@ class CardScreenVM : ViewModel() {
                 user_count = "6,342",
                 price = "Free",
                 description = "Destiny 2 — компьютерная игра в жанре шутера от первого лица с элементами MMORPG, разработанная американской компанией Bungie.",
+                imageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/230410/header.jpg?t=1601568920"
             )
         )
-        return mList.toList()
     }
 
-    fun downloadImageUrls(data: List<CardData>, callBack: DownloadImagesUrlsCallback) {
-        val ids = getCardIds(data)
-
-        for (id in ids) {
-            val imgRef = storageRef.child("$id.jpg")
-            imgRef.downloadUrl.addOnSuccessListener {
-                imagesUrl.add(it.toString())
-                Log.d("Upload_From_Storage", "Success: id=$id, URL=$it, Ids=${ids.size}")
-                if (id == ids.size) {
-                    Log.d("Upload_From_Storage", "Start Callback")
-                    callBack.onCallback(imagesUrl)
-                }
-            }.addOnFailureListener {
-                Log.e("Upload_From_Storage", "Failure")
-            }
-        }
-    }
+//    fun downloadImageUrls(data: List<CardData>, callBack: DownloadImagesUrlsCallback) {
+//        val ids = getCardIds(data)
+//
+//        for (id in ids) {
+//            val imgRef = storageRef.child("$id.jpg")
+//            imgRef.downloadUrl.addOnSuccessListener {
+//                _imagesUrl.value?.add(it.toString())
+//                Log.d("Upload_From_Storage", "Success: id=$id, URL=$it, Ids=${ids.size}")
+//                if (id == ids.size) {
+//                    Log.d("Upload_From_Storage", "Start Callback")
+//                    callBack.onCallback(imagesUrl.value!!)
+//                }
+//            }.addOnFailureListener {
+//                Log.e("Upload_From_Storage", "Failure")
+//            }
+//        }
+//    }
 
     private fun getCardIds(data: List<CardData>): List<Int> {
         val ids = mutableListOf<Int>()

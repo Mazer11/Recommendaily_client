@@ -13,12 +13,11 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val vm = CardScreenVM()
 
         setContent {
             Recommendailytheme {
                 val navController = rememberAnimatedNavController()
-                NavGraph(navController = navController, viewModel = vm)
+                NavGraph(navController = navController)
             }
         }
     }

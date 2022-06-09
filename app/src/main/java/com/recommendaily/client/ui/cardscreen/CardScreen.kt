@@ -3,6 +3,7 @@ package com.recommendaily.client.ui.cardscreen
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -10,6 +11,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.recommendaily.client.R
+import com.recommendaily.client.model.CardData
+import com.recommendaily.client.ui.cardscreen.components.CardContent
 import com.recommendaily.client.ui.cardscreen.components.DraggableCard
 import com.recommendaily.client.ui.cardscreen.components.UnderCardArrows
 import com.recommendaily.client.ui.navigation.components.NavRoots
@@ -17,10 +20,11 @@ import com.recommendaily.client.viewmodel.CardScreenVM
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CardScreen(navController: NavController, vm: CardScreenVM) {
-    val data = vm.getCardsData()
+fun CardScreen(navController: NavController) {
+    val vm = CardScreenVM()
+    val cards = vm.cardData.observeAsState()
+
 //    val isUrlsLoaded = remember { mutableStateOf(false) }
-    val imageUrls = vm.getImages()
     //val imageUrls = remember { mutableStateListOf<String>() }
 //    vm.downloadImageUrls(data = data, callBack = object : DownloadImagesUrlsCallback {
 //        override fun onCallback(value: MutableList<String>) {
@@ -37,7 +41,6 @@ fun CardScreen(navController: NavController, vm: CardScreenVM) {
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        //imageUrls = listOf()
                         navController.navigate(NavRoots.SettingsRoot.route)
                     }
                     ) {
@@ -49,7 +52,6 @@ fun CardScreen(navController: NavController, vm: CardScreenVM) {
                 },
                 actions = {
                     IconButton(onClick = {
-                        //imageUrls.clear()
                         navController.navigate(NavRoots.RecommendationRoot.route)
                     }
                     ) {
@@ -70,11 +72,32 @@ fun CardScreen(navController: NavController, vm: CardScreenVM) {
         ) {
 
             UnderCardArrows()
-            Box(modifier = Modifier.fillMaxWidth()) {
-           //     if (isUrlsLoaded.value && imageUrls.size >= data.size)
-                    data.forEachIndexed { index, cardData ->
-                        DraggableCard(data = cardData, imageUrl = imageUrls[index])
+            Box() {
+                val isListEmpty = remember { mutableStateOf(false) }
+                val swipedCards = mutableListOf<CardData>()
+
+                val cardIterator: MutableIterator<CardData>?
+
+                if (cards.value!!.size > 0) {
+                    cardIterator = cards.value?.iterator()
+                    while (cardIterator?.hasNext() == true) {
+                        val iterator = cardIterator.next()
+                        DraggableCard(
+                            data = iterator,
+                            onSwiped = { swipeResult, data ->
+                                //data.swipeResult = swipeResult
+                                //swipedCards.add(data)
+                                if (cardIterator.hasNext()) {
+                                    cardIterator.remove()
+                                    if (!cardIterator.hasNext())
+                                        isListEmpty.value = true
+                                }
+                            },
+                        ) {
+                            CardContent(data = iterator)
+                        }
                     }
+                }
             }
 
             //Footer Button
@@ -93,38 +116,3 @@ fun CardScreen(navController: NavController, vm: CardScreenVM) {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

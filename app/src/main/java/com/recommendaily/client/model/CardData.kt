@@ -1,5 +1,7 @@
 package com.recommendaily.client.model
 
+import com.recommendaily.client.ui.cardscreen.components.DragResult
+
 data class CardData(
     val id: Int,
     val title: String,
@@ -10,4 +12,6 @@ data class CardData(
     val user_count: String,
     val price: String,
     val description: String,
+    val imageUrl: String,
+    var swipeResult: DragResult = DragResult.NONE
 )
