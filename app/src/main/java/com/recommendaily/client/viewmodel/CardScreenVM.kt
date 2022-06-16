@@ -9,19 +9,29 @@ import com.recommendaily.client.model.CardData
 class CardScreenVM : ViewModel() {
 
     /**
-     * List of items to show on CardScreen
+     * Firebase Storage reference
      */
     private val storageRef = FirebaseStorage.getInstance().reference
 
+    /**
+     * [MutableLiveData] of [MutableList] with data for cards (id, title, price, image url, etc.)
+     */
     private val _cardData = MutableLiveData<MutableList<CardData>>()
     val cardData: LiveData<MutableList<CardData>> = _cardData
+
+    /**
+     * [MutableList] of data with swiped cards
+     */
+    private val _swipedCardData = mutableListOf<CardData>()
 
     init {
         _cardData.value = provideCardInfo()
     }
 
     /**
-     * Gets data from server
+     * This function provides cards data.
+     *
+     * Currently, provides prepared in advance sample data.
      */
     private fun provideCardInfo(): MutableList<CardData> {
         return mutableListOf(
@@ -83,7 +93,7 @@ class CardScreenVM : ViewModel() {
                 user_count = "17,940",
                 price = "24.99\$",
                 description = "Destiny 2 — компьютерная игра в жанре шутера от первого лица с элементами MMORPG, разработанная американской компанией Bungie.",
-                imageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/1085660/header.jpg?t=1598982557"
+                imageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/1145360/header.jpg?t=1601510167"
             ),
             CardData(
                 id = 5,
@@ -95,7 +105,7 @@ class CardScreenVM : ViewModel() {
                 user_count = "284,689",
                 price = "Free",
                 description = "Destiny 2 — компьютерная игра в жанре шутера от первого лица с элементами MMORPG, разработанная американской компанией Bungie.",
-                imageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/1145360/header.jpg?t=1601510167"
+                imageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/1085660/header.jpg?t=1598982557"
             ),
             CardData(
                 id = 6,
@@ -122,7 +132,7 @@ class CardScreenVM : ViewModel() {
                 imageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/359550/header.jpg?t=1602605478"
             ),
             CardData(
-                id = 9,
+                id = 8,
                 title = "Warframe",
                 subtitle = "Single-player Controller SupportRemote PhoneRemote",
                 release_date = "Mar 25, 2013",
@@ -134,6 +144,21 @@ class CardScreenVM : ViewModel() {
                 imageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/230410/header.jpg?t=1601568920"
             )
         )
+    }
+
+    /**
+     * Adds [dataToMemorize] inside [_swipedCardData]. Data will not be added if [_swipedCardData]
+     * have copy of it already.
+     *
+     * It's assumed that the function will be used to transfer card data after a swipe.
+     * @param dataToMemorize [CardData] to memorize.
+     */
+    fun memorizeSwipeResult(
+        dataToMemorize: CardData
+    ) {
+        if (!_swipedCardData.contains(dataToMemorize)) {
+            _swipedCardData.add(dataToMemorize)
+        }
     }
 
 //    fun downloadImageUrls(data: List<CardData>, callBack: DownloadImagesUrlsCallback) {
@@ -153,15 +178,6 @@ class CardScreenVM : ViewModel() {
 //            }
 //        }
 //    }
-
-    private fun getCardIds(data: List<CardData>): List<Int> {
-        val ids = mutableListOf<Int>()
-        for (item in data) {
-            ids.add(item.id)
-        }
-        return ids
-    }
-
 }
 
 

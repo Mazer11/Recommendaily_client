@@ -1,12 +1,15 @@
 package com.recommendaily.client.ui.navigation
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.navigation
 import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.recommendaily.client.ui.cardscreen.CardScreen
 import com.recommendaily.client.ui.navigation.components.NavRoots
 import com.recommendaily.client.ui.recommendation.RecommendationScreen
@@ -18,7 +21,9 @@ import com.recommendaily.client.viewmodel.CardScreenVM
 fun NavGraph(
     navController: NavHostController
 ) {
-    val animDuration = 400
+    val animDuration = 300
+    val viewModel = CardScreenVM()
+
     AnimatedNavHost(
         navController = navController,
         startDestination = NavRoots.CardRoot.route
@@ -41,7 +46,7 @@ fun NavGraph(
                     else -> null
                 }
             },
-            popEnterTransition = {
+            enterTransition = {
                 when (initialState.destination.route) {
                     NavRoots.SettingsRoot.route ->
                         slideIntoContainer(
@@ -58,7 +63,10 @@ fun NavGraph(
                 }
             }
         ) {
-            CardScreen(navController = navController)
+            CardScreen(
+                navController = navController,
+                vm = viewModel
+            )
         }
 
         composable(
@@ -74,8 +82,8 @@ fun NavGraph(
                     else -> null
                 }
             },
-            popEnterTransition = {
-                when(initialState.destination.route){
+            enterTransition = {
+                when (initialState.destination.route) {
                     NavRoots.CardRoot.route -> {
                         slideIntoContainer(
                             AnimatedContentScope.SlideDirection.Left,
@@ -92,7 +100,7 @@ fun NavGraph(
         composable(
             route = NavRoots.SettingsRoot.route,
             exitTransition = {
-                when(targetState.destination.route){
+                when (targetState.destination.route) {
                     NavRoots.CardRoot.route -> {
                         slideOutOfContainer(
                             AnimatedContentScope.SlideDirection.Left,
@@ -102,8 +110,8 @@ fun NavGraph(
                     else -> null
                 }
             },
-            popEnterTransition = {
-                when(initialState.destination.route){
+            enterTransition = {
+                when (initialState.destination.route) {
                     NavRoots.CardRoot.route -> {
                         slideIntoContainer(
                             AnimatedContentScope.SlideDirection.Right,

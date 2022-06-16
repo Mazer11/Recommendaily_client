@@ -1,5 +1,6 @@
 package com.recommendaily.client.ui.cardscreen.components
 
+import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.tween
@@ -21,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -32,17 +34,20 @@ import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 enum class DragResult {
-    ACCEPTED, REJECTED, NONE
+    LIKES, DISLIKES, NONE
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DraggableCard(
     data: CardData,
+    index: Int,
     onSwiped: (DragResult, CardData) -> Unit,
+    idToHide: List<Int>,
     content: @Composable () -> Unit
 ) {
     //Swipe values
+    val cardHeight: Dp = if(idToHide.contains(index)) 0.dp else 524.dp
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val swipeXLeft = -(screenWidth.value * 3.2).toFloat()
     val swipeXRight = (screenWidth.value * 3.2).toFloat()
@@ -59,13 +64,12 @@ fun DraggableCard(
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(600.dp)
+                .height(cardHeight)
                 .padding(16.dp)
                 .dragContent(
                     swipeX = swipeX,
                     swipeY = swipeY,
-                    maxX = swipeXRight,
-                    onSwiped = { _, _ -> }
+                    maxX = swipeXRight
                 )
                 .graphicsLayer(
                     translationX = swipeX.value,
@@ -76,7 +80,8 @@ fun DraggableCard(
             content()
         }
     } else {
-        val swipeResult = if (swipeX.value > 0) DragResult.ACCEPTED else DragResult.REJECTED
+        Log.d("InDraggableCard", data.title)
+        val swipeResult = if (swipeX.value > 0) DragResult.DISLIKES else DragResult.LIKES
         onSwiped(swipeResult, data)
     }
 }
@@ -94,7 +99,7 @@ fun CardContent(
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        Text(text = data.title, style = AppTypography.displaySmall)
+        Text(text = data.title, style = AppTypography.headlineSmall)
         Text(text = data.developer, style = AppTypography.titleSmall)
     }
 
@@ -102,8 +107,8 @@ fun CardContent(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(215.dp),
-        color = MaterialTheme.colorScheme.onPrimaryContainer
+            .height(185.dp),
+        color = MaterialTheme.colorScheme.background
     ) {
 
         Image(
@@ -133,13 +138,13 @@ fun CardContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 4.dp)
+                .padding(horizontal = 8.dp)
         ) {
             Row {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_rate),
                     contentDescription = null,
-                    modifier = Modifier.padding(end = 4.dp)
+                    modifier = Modifier.padding(end = 4.dp, top = 1.dp)
                 )
                 Text(text = data.popularity, style = AppTypography.bodyLarge)
             }
@@ -176,8 +181,7 @@ fun CardContent(
 fun Modifier.dragContent(
     swipeX: Animatable<Float, AnimationVector1D>,
     swipeY: Animatable<Float, AnimationVector1D>,
-    maxX: Float,
-    onSwiped: (Any, Any) -> Unit
+    maxX: Float
 ): Modifier = composed {
     val coroutineScope = rememberCoroutineScope()
     pointerInput(Unit) {

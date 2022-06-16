@@ -1,5 +1,6 @@
 package com.recommendaily.client.ui.cardscreen
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -9,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.recommendaily.client.R
 import com.recommendaily.client.model.CardData
@@ -20,12 +22,17 @@ import com.recommendaily.client.viewmodel.CardScreenVM
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CardScreen(navController: NavController) {
-    val vm = CardScreenVM()
+fun CardScreen(
+    navController: NavController,
+    vm: CardScreenVM
+) {
     val cards = vm.cardData.observeAsState()
 
+    val idCardToHide = remember { mutableStateListOf<Int>() }
+    var currentCardId = 8
+
 //    val isUrlsLoaded = remember { mutableStateOf(false) }
-    //val imageUrls = remember { mutableStateListOf<String>() }
+//    val imageUrls = remember { mutableStateListOf<String>() }
 //    vm.downloadImageUrls(data = data, callBack = object : DownloadImagesUrlsCallback {
 //        override fun onCallback(value: MutableList<String>) {
 //            imageUrls.addAll(value)
@@ -72,38 +79,36 @@ fun CardScreen(navController: NavController) {
         ) {
 
             UnderCardArrows()
-            Box() {
-                val isListEmpty = remember { mutableStateOf(false) }
-                val swipedCards = mutableListOf<CardData>()
 
-                val cardIterator: MutableIterator<CardData>?
+            Box {
+                cards.value?.forEachIndexed { index, card ->
+                    DraggableCard(
+                        data = card,
+                        index = index,
+                        idToHide = idCardToHide.toList(),
+                        onSwiped = { swipeResult, data ->
+                            Log.d("onSwipe", "Yes")
 
-                if (cards.value!!.size > 0) {
-                    cardIterator = cards.value?.iterator()
-                    while (cardIterator?.hasNext() == true) {
-                        val iterator = cardIterator.next()
-                        DraggableCard(
-                            data = iterator,
-                            onSwiped = { swipeResult, data ->
-                                //data.swipeResult = swipeResult
-                                //swipedCards.add(data)
-                                if (cardIterator.hasNext()) {
-                                    cardIterator.remove()
-                                    if (!cardIterator.hasNext())
-                                        isListEmpty.value = true
-                                }
-                            },
-                        ) {
-                            CardContent(data = iterator)
-                        }
+                            currentCardId -= 1
+
+                            data.swipeResult = swipeResult
+                            vm.memorizeSwipeResult(dataToMemorize = data)
+                        },
+                    ) {
+                        CardContent(data = card)
                     }
                 }
             }
 
             //Footer Button
             ExtendedFloatingActionButton(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.padding(vertical = 16.dp)
+                onClick = {
+                    idCardToHide.add(currentCardId.toInt())
+                    Log.d("currentCardId", "idCardToHide size: " + idCardToHide.size.toString())
+                    Log.d("currentCardId", "Card id: $currentCardId")
+                    currentCardId -= 1
+                },
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_neutral),
