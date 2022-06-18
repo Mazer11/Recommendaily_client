@@ -1,5 +1,7 @@
 package com.recommendaily.client.viewmodel
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.*
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,10 +21,13 @@ class CardScreenVM : ViewModel() {
     private val _cardData = MutableLiveData<MutableList<CardData>>()
     val cardData: LiveData<MutableList<CardData>> = _cardData
 
+    var currentCardId = 8
+    var counter = 0
+
     /**
      * [MutableList] of data with swiped cards
      */
-    private val _swipedCardData = mutableListOf<CardData>()
+    private val swipedCardData = mutableListOf<CardData>()
 
     init {
         _cardData.value = provideCardInfo()
@@ -147,7 +152,7 @@ class CardScreenVM : ViewModel() {
     }
 
     /**
-     * Adds [dataToMemorize] inside [_swipedCardData]. Data will not be added if [_swipedCardData]
+     * Adds [dataToMemorize] inside [swipedCardData]. Data will not be added if [swipedCardData]
      * have copy of it already.
      *
      * It's assumed that the function will be used to transfer card data after a swipe.
@@ -156,9 +161,23 @@ class CardScreenVM : ViewModel() {
     fun memorizeSwipeResult(
         dataToMemorize: CardData
     ) {
-        if (!_swipedCardData.contains(dataToMemorize)) {
-            _swipedCardData.add(dataToMemorize)
+        if (!swipedCardData.contains(dataToMemorize)) {
+            swipedCardData.add(dataToMemorize)
         }
+    }
+
+    fun findCurrentCardNumber() {
+        if (currentCardId > 0)
+            if (counter != swipedCardData.size) {
+                currentCardId -= swipedCardData.size - counter
+                counter = swipedCardData.size
+            }
+    }
+
+    fun setCardNumberCounterToZero(){
+        counter = 0
+        currentCardId = 8
+        swipedCardData.removeAll(swipedCardData)
     }
 
 //    fun downloadImageUrls(data: List<CardData>, callBack: DownloadImagesUrlsCallback) {

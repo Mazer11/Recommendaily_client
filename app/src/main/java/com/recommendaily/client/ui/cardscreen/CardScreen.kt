@@ -27,9 +27,10 @@ fun CardScreen(
     vm: CardScreenVM
 ) {
     val cards = vm.cardData.observeAsState()
-
     val idCardToHide = remember { mutableStateListOf<Int>() }
-    var currentCardId = 8
+
+    vm.setCardNumberCounterToZero()
+
 
 //    val isUrlsLoaded = remember { mutableStateOf(false) }
 //    val imageUrls = remember { mutableStateListOf<String>() }
@@ -89,7 +90,7 @@ fun CardScreen(
                         onSwiped = { swipeResult, data ->
                             Log.d("onSwipe", "Yes")
 
-                            currentCardId -= 1
+                            vm.findCurrentCardNumber()
 
                             data.swipeResult = swipeResult
                             vm.memorizeSwipeResult(dataToMemorize = data)
@@ -103,10 +104,10 @@ fun CardScreen(
             //Footer Button
             ExtendedFloatingActionButton(
                 onClick = {
-                    idCardToHide.add(currentCardId.toInt())
+                    idCardToHide.add(vm.currentCardId)
                     Log.d("currentCardId", "idCardToHide size: " + idCardToHide.size.toString())
-                    Log.d("currentCardId", "Card id: $currentCardId")
-                    currentCardId -= 1
+                    Log.d("currentCardId", "Card id: ${vm.currentCardId}")
+                    vm.currentCardId -= 1
                 },
                 modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
             ) {
