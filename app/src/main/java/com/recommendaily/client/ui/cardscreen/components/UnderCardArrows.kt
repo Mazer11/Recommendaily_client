@@ -30,7 +30,7 @@ fun UnderCardArrows() {
             )
 
             Text(
-                text = stringResource(R.string.dislike),
+                text = stringResource(R.string.like),
                 maxLines = 1,
                 modifier = Modifier.padding(start = 28.dp),
                 color = MaterialTheme.colorScheme.tertiary
@@ -41,7 +41,7 @@ fun UnderCardArrows() {
             contentAlignment = Alignment.CenterEnd,
         ) {
             Text(
-                text = stringResource(R.string.like),
+                text = stringResource(R.string.dislike),
                 maxLines = 1,
                 modifier = Modifier.padding(end = 28.dp),
                 color = MaterialTheme.colorScheme.tertiary

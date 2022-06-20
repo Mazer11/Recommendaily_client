@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.recommendaily.client.ui.navigation.NavGraph
@@ -16,7 +17,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            Recommendailytheme {
+            Recommendailytheme(
+                useDarkTheme = isSystemInDarkTheme()
+            ) {
                 val navController = rememberAnimatedNavController()
                 NavGraph(navController)
             }

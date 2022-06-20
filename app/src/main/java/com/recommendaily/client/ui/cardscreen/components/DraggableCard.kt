@@ -49,17 +49,13 @@ fun DraggableCard(
     //Swipe values
     val cardHeight: Dp = if(idToHide.contains(index)) 0.dp else 524.dp
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-    val swipeXLeft = -(screenWidth.value * 3.2).toFloat()
-    val swipeXRight = (screenWidth.value * 3.2).toFloat()
-    val swipeYUp = -1000f
-    val swipeYDown = 1000f
-    val swipeX = remember { Animatable(0f) }
-    val swipeY = remember { Animatable(0f) }
-    swipeX.updateBounds(swipeXLeft, swipeXRight)
-    swipeY.updateBounds(swipeYUp, swipeYDown)
+    val swipeBoundLeft = -(screenWidth.value*3)
+    val swipeBoundRight = (screenWidth.value*3)
+    val swipeBounds = remember { Animatable(0f) }
+    swipeBounds.updateBounds(swipeBoundLeft, swipeBoundRight)
 
-    if (abs(swipeX.value) < swipeXRight - 50f) {
-        val rotationFraction = (swipeX.value / 60).coerceIn(-40f, 40f)
+    if (abs(swipeBounds.value) < swipeBoundRight) {
+        val rotationFraction = (swipeBounds.value / 60).coerceIn(-40f, 40f)
         ElevatedCard(
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
@@ -67,13 +63,11 @@ fun DraggableCard(
                 .height(cardHeight)
                 .padding(16.dp)
                 .dragContent(
-                    swipeX = swipeX,
-                    swipeY = swipeY,
-                    maxX = swipeXRight
+                    swipeCardValue = swipeBounds,
+                    maxX = swipeBoundRight
                 )
                 .graphicsLayer(
-                    translationX = swipeX.value,
-                    translationY = swipeY.value,
+                    translationX = swipeBounds.value,
                     rotationZ = rotationFraction
                 ),
         ) {
@@ -81,7 +75,7 @@ fun DraggableCard(
         }
     } else {
         Log.d("InDraggableCard", data.title)
-        val swipeResult = if (swipeX.value > 0) DragResult.DISLIKES else DragResult.LIKES
+        val swipeResult = if (swipeBounds.value > 0) DragResult.DISLIKES else DragResult.LIKES
         onSwiped(swipeResult, data)
     }
 }
@@ -116,7 +110,7 @@ fun CardContent(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(data.imageUrl)
                     .error(R.drawable.ic_launcher_foreground)
-                    .crossfade(false)
+                    .crossfade(true)
                     .build(),
                 filterQuality = FilterQuality.Low,
                 contentScale = ContentScale.FillBounds
@@ -179,8 +173,7 @@ fun CardContent(
 
 @Composable
 fun Modifier.dragContent(
-    swipeX: Animatable<Float, AnimationVector1D>,
-    swipeY: Animatable<Float, AnimationVector1D>,
+    swipeCardValue: Animatable<Float, AnimationVector1D>,
     maxX: Float
 ): Modifier = composed {
     val coroutineScope = rememberCoroutineScope()
@@ -188,25 +181,24 @@ fun Modifier.dragContent(
         this.detectDragGestures(
             onDragCancel = {
                 coroutineScope.apply {
-                    launch { swipeX.animateTo(0f) }
-                    launch { swipeY.animateTo(0f) }
+                    launch { swipeCardValue.animateTo(0f) }
                 }
             },
             onDragEnd = {
                 coroutineScope.apply {
-                    if (abs(swipeX.targetValue) < abs(maxX) / 4) {
+                    if (abs(swipeCardValue.targetValue) < maxX / 4) {
                         launch {
-                            swipeX.animateTo(0f, tween(400))
+                            swipeCardValue.animateTo(0f, tween(400))
                         }
-                        launch {
-                            swipeY.animateTo(0f, tween(400))
-                        }
+//                        launch {
+//                            swipeY.animateTo(0f, tween(400))
+//                        }
                     } else {
                         launch {
-                            if (swipeX.targetValue > 0) {
-                                swipeX.animateTo(maxX, tween(400))
+                            if (swipeCardValue.targetValue > 0) {
+                                swipeCardValue.animateTo(maxX, tween(400))
                             } else {
-                                swipeX.animateTo(-maxX, tween(400))
+                                swipeCardValue.animateTo(-maxX, tween(400))
                             }
                         }
                     }
@@ -215,8 +207,7 @@ fun Modifier.dragContent(
         ) { change, dragAmount ->
             change.consume()
             coroutineScope.apply {
-                launch { swipeX.animateTo(swipeX.targetValue + dragAmount.x) }
-                launch { swipeY.animateTo(swipeY.targetValue + dragAmount.y) }
+                launch { swipeCardValue.animateTo(swipeCardValue.targetValue + dragAmount.x) }
             }
         }
     }

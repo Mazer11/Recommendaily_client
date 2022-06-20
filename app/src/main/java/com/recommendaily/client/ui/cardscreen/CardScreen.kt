@@ -10,14 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.recommendaily.client.R
-import com.recommendaily.client.model.CardData
 import com.recommendaily.client.ui.cardscreen.components.CardContent
 import com.recommendaily.client.ui.cardscreen.components.DraggableCard
 import com.recommendaily.client.ui.cardscreen.components.UnderCardArrows
-import com.recommendaily.client.ui.navigation.components.NavRoots
+import com.recommendaily.client.ui.navigation.components.NavRoutes
+import com.recommendaily.client.ui.topappbar.RecommendailyTopAppBar
 import com.recommendaily.client.viewmodel.CardScreenVM
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,32 +42,9 @@ fun CardScreen(
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(text = stringResource(id = R.string.recommendaily))
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navController.navigate(NavRoots.SettingsRoot.route)
-                    }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_settings),
-                            contentDescription = null
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = {
-                        navController.navigate(NavRoots.RecommendationRoot.route)
-                    }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_recommendation),
-                            contentDescription = null
-                        )
-                    }
-                }
+            RecommendailyTopAppBar(
+                navController = navController,
+                leftNavButtonRoute = NavRoutes.RecommendationRoute.route
             )
         }
     ) { padding ->

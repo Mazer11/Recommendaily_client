@@ -1,17 +1,26 @@
 package com.recommendaily.client.ui.settings
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.recommendaily.client.R
+import com.recommendaily.client.ui.theme.Recommendailytheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavController) {
+
+    val isDark = isSystemInDarkTheme()
+    val isDarkTheme = remember { mutableStateOf(isDark) }
+
     Scaffold(
         topBar = {
             SmallTopAppBar(
@@ -32,7 +41,41 @@ fun SettingsScreen(navController: NavController) {
                 .padding(it)
                 .fillMaxSize()
         ) {
-
+            Row() {
+                Text("Dark theme")
+                Switch(checked = isDarkTheme.value, onCheckedChange = {
+                    /*TODO*/
+                })
+            }
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
