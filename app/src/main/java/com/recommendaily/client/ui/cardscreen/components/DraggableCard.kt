@@ -94,7 +94,8 @@ fun CardContent(
             .padding(8.dp)
     ) {
         Text(text = data.title, style = AppTypography.headlineSmall)
-        Text(text = data.developer, style = AppTypography.titleSmall)
+        Text(text = data.developer, style = AppTypography.titleMedium)
+        Text(text = data.release_date, style = AppTypography.titleSmall)
     }
 
     //Image
@@ -153,7 +154,7 @@ fun CardContent(
             Text(text = data.price, style = AppTypography.bodyLarge)
         }
         FlowRow(
-            mainAxisSpacing = 8.dp
+            mainAxisSpacing = 4.dp
         ) {
             for (category in categories)
                 ElevatedSuggestionChip(
@@ -167,7 +168,6 @@ fun CardContent(
                     shape = CircleShape
                 )
         }
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 

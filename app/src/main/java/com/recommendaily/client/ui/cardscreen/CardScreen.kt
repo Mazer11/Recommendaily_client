@@ -81,11 +81,14 @@ fun CardScreen(
             ExtendedFloatingActionButton(
                 onClick = {
                     idCardToHide.add(vm.currentCardId)
-                    Log.d("currentCardId", "idCardToHide size: " + idCardToHide.size.toString())
+                    Log.d("currentCardId", "idCardToHide size: "
+                            + idCardToHide.size.toString())
                     Log.d("currentCardId", "Card id: ${vm.currentCardId}")
                     vm.currentCardId -= 1
                 },
-                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+                modifier = Modifier
+                    .padding(top = 16.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
+                    .fillMaxWidth()
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_neutral),
