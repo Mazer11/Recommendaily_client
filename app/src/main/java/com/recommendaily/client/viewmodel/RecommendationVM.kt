@@ -1,36 +1,20 @@
 package com.recommendaily.client.viewmodel
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.*
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.storage.FirebaseStorage
 import com.recommendaily.client.model.CardData
 
-class CardScreenVM : ViewModel() {
+class RecommendationVM : ViewModel() {
 
-    /**
-     * Firebase Storage reference
-     */
-    private val storageRef = FirebaseStorage.getInstance().reference
+    private val _recommendations = MutableLiveData<MutableList<CardData>>()
+    val recommendations: LiveData<MutableList<CardData>> = _recommendations
 
-    /**
-     * [MutableLiveData] of [MutableList] with data for cards (id, title, price, image url, etc.)
-     */
-    private val _cardData = MutableLiveData<MutableList<CardData>>()
-    val cardData: LiveData<MutableList<CardData>> = _cardData
-
-    var currentCardId = 8
-    var counter = 0
-
-    /**
-     * [MutableList] of data with swiped cards
-     */
-    private val swipedCardData = mutableListOf<CardData>()
+    private val _rated = MutableLiveData<MutableList<CardData>>()
+    val rated: LiveData<MutableList<CardData>> = _rated
 
     init {
-        _cardData.value = provideCardInfo()
+        _recommendations.value = provideCardInfo()
     }
 
     /**
@@ -151,81 +135,4 @@ class CardScreenVM : ViewModel() {
         )
     }
 
-    /**
-     * Adds [dataToMemorize] inside [swipedCardData]. Data will not be added if [swipedCardData]
-     * have copy of it already.
-     *
-     * It's assumed that the function will be used to transfer card data after a swipe.
-     * @param dataToMemorize [CardData] to memorize.
-     */
-    fun memorizeSwipeResult(
-        dataToMemorize: CardData
-    ) {
-        if (!swipedCardData.contains(dataToMemorize)) {
-            swipedCardData.add(dataToMemorize)
-        }
-    }
-
-    fun findCurrentCardNumber() {
-        if (currentCardId > 0)
-            if (counter != swipedCardData.size) {
-                currentCardId -= swipedCardData.size - counter
-                counter = swipedCardData.size
-            }
-    }
-
-    fun setCardNumberCounterToZero(){
-        counter = 0
-        currentCardId = 8
-        swipedCardData.removeAll(swipedCardData)
-    }
-
-//    fun downloadImageUrls(data: List<CardData>, callBack: DownloadImagesUrlsCallback) {
-//        val ids = getCardIds(data)
-//
-//        for (id in ids) {
-//            val imgRef = storageRef.child("$id.jpg")
-//            imgRef.downloadUrl.addOnSuccessListener {
-//                _imagesUrl.value?.add(it.toString())
-//                Log.d("Upload_From_Storage", "Success: id=$id, URL=$it, Ids=${ids.size}")
-//                if (id == ids.size) {
-//                    Log.d("Upload_From_Storage", "Start Callback")
-//                    callBack.onCallback(imagesUrl.value!!)
-//                }
-//            }.addOnFailureListener {
-//                Log.e("Upload_From_Storage", "Failure")
-//            }
-//        }
-//    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

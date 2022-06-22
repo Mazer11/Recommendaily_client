@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Theme.Recommendaily" parent="android:Theme.Material.NoActionBar">
-        <item name="android:statusBarColor">@color/statusbar_light</item>
+        <item name="android:statusBarColor">@color/statusbar_dark</item>
     </style>
 
 </resources>

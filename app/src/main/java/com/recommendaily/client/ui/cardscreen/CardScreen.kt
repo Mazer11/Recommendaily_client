@@ -1,8 +1,10 @@
 package com.recommendaily.client.ui.cardscreen
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -10,18 +12,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.recommendaily.client.R
+import com.recommendaily.client.ui.cardscreen.components.CardContent
 import com.recommendaily.client.ui.cardscreen.components.DraggableCard
 import com.recommendaily.client.ui.cardscreen.components.UnderCardArrows
-import com.recommendaily.client.ui.navigation.components.NavRoots
+import com.recommendaily.client.ui.navigation.components.NavRoutes
+import com.recommendaily.client.ui.topappbar.RecommendailyTopAppBar
 import com.recommendaily.client.viewmodel.CardScreenVM
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CardScreen(navController: NavController, vm: CardScreenVM) {
-    val data = vm.getCardsData()
+fun CardScreen(
+    navController: NavController,
+    vm: CardScreenVM
+) {
+    val cards = vm.cardData.observeAsState()
+    val idCardToHide = remember { mutableStateListOf<Int>() }
+
+    vm.setCardNumberCounterToZero()
+
+
 //    val isUrlsLoaded = remember { mutableStateOf(false) }
-    val imageUrls = vm.getImages()
-    //val imageUrls = remember { mutableStateListOf<String>() }
+//    val imageUrls = remember { mutableStateListOf<String>() }
 //    vm.downloadImageUrls(data = data, callBack = object : DownloadImagesUrlsCallback {
 //        override fun onCallback(value: MutableList<String>) {
 //            imageUrls.addAll(value)
@@ -31,34 +42,9 @@ fun CardScreen(navController: NavController, vm: CardScreenVM) {
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(text = stringResource(id = R.string.recommendaily))
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        //imageUrls = listOf()
-                        navController.navigate(NavRoots.SettingsRoot.route)
-                    }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_settings),
-                            contentDescription = null
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = {
-                        //imageUrls.clear()
-                        navController.navigate(NavRoots.RecommendationRoot.route)
-                    }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_recommendation),
-                            contentDescription = null
-                        )
-                    }
-                }
+            RecommendailyTopAppBar(
+                navController = navController,
+                leftNavButtonRoute = NavRoutes.RecommendationRoute.route
             )
         }
     ) { padding ->
@@ -70,17 +56,39 @@ fun CardScreen(navController: NavController, vm: CardScreenVM) {
         ) {
 
             UnderCardArrows()
-            Box(modifier = Modifier.fillMaxWidth()) {
-           //     if (isUrlsLoaded.value && imageUrls.size >= data.size)
-                    data.forEachIndexed { index, cardData ->
-                        DraggableCard(data = cardData, imageUrl = imageUrls[index])
+
+            Box {
+                cards.value?.forEachIndexed { index, card ->
+                    DraggableCard(
+                        data = card,
+                        index = index,
+                        idToHide = idCardToHide.toList(),
+                        onSwiped = { swipeResult, data ->
+                            Log.d("onSwipe", "Yes")
+
+                            vm.findCurrentCardNumber()
+
+                            data.swipeResult = swipeResult
+                            vm.memorizeSwipeResult(dataToMemorize = data)
+                        },
+                    ) {
+                        CardContent(data = card)
                     }
+                }
             }
 
             //Footer Button
             ExtendedFloatingActionButton(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.padding(vertical = 16.dp)
+                onClick = {
+                    idCardToHide.add(vm.currentCardId)
+                    Log.d("currentCardId", "idCardToHide size: "
+                            + idCardToHide.size.toString())
+                    Log.d("currentCardId", "Card id: ${vm.currentCardId}")
+                    vm.currentCardId -= 1
+                },
+                modifier = Modifier
+                    .padding(top = 16.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
+                    .fillMaxWidth()
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_neutral),
@@ -93,38 +101,3 @@ fun CardScreen(navController: NavController, vm: CardScreenVM) {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -8,7 +8,7 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.recommendaily.client.ui.cardscreen.CardScreen
-import com.recommendaily.client.ui.navigation.components.NavRoots
+import com.recommendaily.client.ui.navigation.components.NavRoutes
 import com.recommendaily.client.ui.recommendation.RecommendationScreen
 import com.recommendaily.client.ui.settings.SettingsScreen
 import com.recommendaily.client.viewmodel.CardScreenVM
@@ -16,24 +16,25 @@ import com.recommendaily.client.viewmodel.CardScreenVM
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavGraph(
-    navController: NavHostController,
-    viewModel: CardScreenVM
+    navController: NavHostController
 ) {
-    val animDuration = 400
+    val animDuration = 300
+    val viewModel = CardScreenVM()
+
     AnimatedNavHost(
         navController = navController,
-        startDestination = NavRoots.CardRoot.route
+        startDestination = NavRoutes.CardRoute.route
     ) {
         composable(
-            route = NavRoots.CardRoot.route,
+            route = NavRoutes.CardRoute.route,
             exitTransition = {
                 when (targetState.destination.route) {
-                    NavRoots.SettingsRoot.route ->
+                    NavRoutes.SettingsRoute.route ->
                         slideOutOfContainer(
                             AnimatedContentScope.SlideDirection.Right,
                             animationSpec = tween(animDuration)
                         )
-                    NavRoots.RecommendationRoot.route -> {
+                    NavRoutes.RecommendationRoute.route -> {
                         slideOutOfContainer(
                             AnimatedContentScope.SlideDirection.Left,
                             animationSpec = tween(animDuration)
@@ -42,14 +43,14 @@ fun NavGraph(
                     else -> null
                 }
             },
-            popEnterTransition = {
+            enterTransition = {
                 when (initialState.destination.route) {
-                    NavRoots.SettingsRoot.route ->
+                    NavRoutes.SettingsRoute.route ->
                         slideIntoContainer(
                             AnimatedContentScope.SlideDirection.Left,
                             animationSpec = tween(animDuration)
                         )
-                    NavRoots.RecommendationRoot.route -> {
+                    NavRoutes.RecommendationRoute.route -> {
                         slideIntoContainer(
                             AnimatedContentScope.SlideDirection.Right,
                             animationSpec = tween(animDuration)
@@ -59,14 +60,17 @@ fun NavGraph(
                 }
             }
         ) {
-            CardScreen(navController = navController, vm = viewModel)
+            CardScreen(
+                navController = navController,
+                vm = viewModel
+            )
         }
 
         composable(
-            route = NavRoots.RecommendationRoot.route,
+            route = NavRoutes.RecommendationRoute.route,
             exitTransition = {
                 when (targetState.destination.route) {
-                    NavRoots.CardRoot.route -> {
+                    NavRoutes.CardRoute.route -> {
                         slideOutOfContainer(
                             AnimatedContentScope.SlideDirection.Right,
                             animationSpec = tween(animDuration)
@@ -75,9 +79,9 @@ fun NavGraph(
                     else -> null
                 }
             },
-            popEnterTransition = {
-                when(initialState.destination.route){
-                    NavRoots.CardRoot.route -> {
+            enterTransition = {
+                when (initialState.destination.route) {
+                    NavRoutes.CardRoute.route -> {
                         slideIntoContainer(
                             AnimatedContentScope.SlideDirection.Left,
                             animationSpec = tween(animDuration)
@@ -91,10 +95,10 @@ fun NavGraph(
         }
 
         composable(
-            route = NavRoots.SettingsRoot.route,
+            route = NavRoutes.SettingsRoute.route,
             exitTransition = {
-                when(targetState.destination.route){
-                    NavRoots.CardRoot.route -> {
+                when (targetState.destination.route) {
+                    NavRoutes.CardRoute.route -> {
                         slideOutOfContainer(
                             AnimatedContentScope.SlideDirection.Left,
                             animationSpec = tween(animDuration)
@@ -103,9 +107,9 @@ fun NavGraph(
                     else -> null
                 }
             },
-            popEnterTransition = {
-                when(initialState.destination.route){
-                    NavRoots.CardRoot.route -> {
+            enterTransition = {
+                when (initialState.destination.route) {
+                    NavRoutes.CardRoute.route -> {
                         slideIntoContainer(
                             AnimatedContentScope.SlideDirection.Right,
                             animationSpec = tween(animDuration)

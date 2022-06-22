@@ -14,4 +14,6 @@ class ExampleUnitTest {
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
     }
+
+    /*TODO timer for correlation between decision speed and user rating*/
 }
