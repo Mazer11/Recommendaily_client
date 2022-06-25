@@ -1,5 +1,7 @@
 package com.recommendaily.client.viewmodel
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,14 +9,12 @@ import com.recommendaily.client.model.CardData
 
 class RecommendationVM : ViewModel() {
 
-    private val _recommendations = MutableLiveData<MutableList<CardData>>()
-    val recommendations: LiveData<MutableList<CardData>> = _recommendations
+    val recommendations: MutableState<MutableList<CardData>> = mutableStateOf(mutableListOf())
 
-    private val _rated = MutableLiveData<MutableList<CardData>>()
-    val rated: LiveData<MutableList<CardData>> = _rated
+    val rated: MutableState<MutableList<CardData>> = mutableStateOf(mutableListOf())
 
     init {
-        _recommendations.value = provideCardInfo()
+        recommendations.value = provideCardInfo()
     }
 
     /**

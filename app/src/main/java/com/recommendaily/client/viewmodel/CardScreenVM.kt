@@ -16,10 +16,9 @@ class CardScreenVM : ViewModel() {
     private val storageRef = FirebaseStorage.getInstance().reference
 
     /**
-     * [MutableLiveData] of [MutableList] with data for cards (id, title, price, image url, etc.)
+     * [MutableState] of [MutableList] with data for cards (id, title, price, image url, etc.)
      */
-    private val _cardData = MutableLiveData<MutableList<CardData>>()
-    val cardData: LiveData<MutableList<CardData>> = _cardData
+    val cardData: MutableState<MutableList<CardData>> = mutableStateOf(mutableListOf())
 
     var currentCardId = 8
     var counter = 0
@@ -30,7 +29,7 @@ class CardScreenVM : ViewModel() {
     private val swipedCardData = mutableListOf<CardData>()
 
     init {
-        _cardData.value = provideCardInfo()
+        cardData.value = provideCardInfo()
     }
 
     /**

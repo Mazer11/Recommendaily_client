@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,7 +22,7 @@ import com.recommendaily.client.viewmodel.RecommendationVM
 @Composable
 fun RecommendationScreen(navController: NavController) {
     val vm = RecommendationVM()
-    val recms = vm.recommendations.observeAsState()
+    val recms = vm.recommendations.value
 
     Scaffold(
         topBar = {
@@ -44,17 +43,16 @@ fun RecommendationScreen(navController: NavController) {
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            if (recms.value != null)
-                items(recms.value!!.toList()) { data ->
-                    if (data.swipeResult == DragResult.NONE)
-                        RecommendationItem(
-                            model = data,
-                            onRate = { rating ->
-                                data.swipeResult = rating
-                                vm.rated.value?.add(data)
-                            }
-                        )
-                }
+            items(recms.toList()) { data ->
+                if (data.swipeResult == DragResult.NONE)
+                    RecommendationItem(
+                        model = data,
+                        onRate = { rating ->
+                            data.swipeResult = rating
+                            vm.rated.value.add(data)
+                        }
+                    )
+            }
         }
     }
 }

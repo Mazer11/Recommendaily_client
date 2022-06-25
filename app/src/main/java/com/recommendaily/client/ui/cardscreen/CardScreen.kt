@@ -25,7 +25,7 @@ fun CardScreen(
     navController: NavController,
     vm: CardScreenVM
 ) {
-    val cards = vm.cardData.observeAsState()
+    val cards = vm.cardData.value
     val idCardToHide = remember { mutableStateListOf<Int>() }
 
     vm.setCardNumberCounterToZero()
@@ -58,7 +58,7 @@ fun CardScreen(
             UnderCardArrows()
 
             Box {
-                cards.value?.forEachIndexed { index, card ->
+                cards.forEachIndexed { index, card ->
                     DraggableCard(
                         data = card,
                         index = index,

@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Recommendaily</string>
-    <string name="recommendaily">Recommen<i>daily</i></string>
     <string name="dont_know">Don\'t know</string>
     <string name="like">Like</string>
     <string name="dislike">Dislike</string>
