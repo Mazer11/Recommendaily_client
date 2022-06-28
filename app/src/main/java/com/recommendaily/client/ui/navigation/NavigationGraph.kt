@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import com.recommendaily.client.RecommendailyApp
 import com.recommendaily.client.ui.cardscreen.CardScreen
 import com.recommendaily.client.ui.navigation.components.NavRoutes
 import com.recommendaily.client.ui.recommendation.RecommendationScreen
@@ -16,7 +17,8 @@ import com.recommendaily.client.viewmodel.CardScreenVM
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    application: RecommendailyApp
 ) {
     val animDuration = 300
     val viewModel = CardScreenVM()
@@ -119,7 +121,10 @@ fun NavGraph(
                 }
             }
         ) {
-            SettingsScreen(navController = navController)
+            SettingsScreen(
+                navController = navController,
+                application =  application
+            )
         }
     }
 }

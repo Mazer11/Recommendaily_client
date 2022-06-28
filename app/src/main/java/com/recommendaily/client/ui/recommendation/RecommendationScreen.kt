@@ -7,10 +7,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import com.recommendaily.client.R
 import com.recommendaily.client.ui.cardscreen.components.DragResult
 import com.recommendaily.client.ui.navigation.components.NavRoutes
 import com.recommendaily.client.ui.recommendation.component.RecommendationItem
@@ -37,7 +37,7 @@ fun RecommendationScreen(navController: NavController) {
         ) {
             item {
                 Text(
-                    text = "Recommendations for you",
+                    text = stringResource(R.string.recommendations_for_you),
                     style = AppTypography.titleSmall,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
@@ -55,10 +55,4 @@ fun RecommendationScreen(navController: NavController) {
             }
         }
     }
-}
-
-@Preview(name = "recommendations preview", showSystemUi = true, showBackground = true)
-@Composable
-fun RecommendationScreenPreview() {
-    RecommendationScreen(navController = rememberNavController())
 }

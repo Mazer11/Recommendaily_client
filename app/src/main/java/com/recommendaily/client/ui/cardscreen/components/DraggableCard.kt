@@ -1,6 +1,5 @@
 package com.recommendaily.client.ui.cardscreen.components
 
-import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.tween
@@ -74,7 +73,6 @@ fun DraggableCard(
             content()
         }
     } else {
-        Log.d("InDraggableCard", data.title)
         val swipeResult = if (swipeBounds.value > 0) DragResult.DISLIKES else DragResult.LIKES
         onSwiped(swipeResult, data)
     }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Recommendaily</string>
+    <string name="dont_know">Не знаю</string>
+    <string name="like">Нравится</string>
+    <string name="dislike">Не нравится</string>
+    <string name="settings">Настройки</string>
+    <string name="dark_mode">Ночной режим</string>
+    <string name="recommendations_for_you">Рекоммендации для вас</string>
+</resources>

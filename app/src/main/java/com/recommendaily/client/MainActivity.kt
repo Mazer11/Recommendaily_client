@@ -4,24 +4,31 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.recommendaily.client.ui.navigation.NavGraph
 import com.recommendaily.client.ui.theme.Recommendailytheme
-import com.recommendaily.client.viewmodel.CardScreenVM
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var application: RecommendailyApp
+
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             Recommendailytheme(
-                useDarkTheme = isSystemInDarkTheme()
+                useDarkTheme = application.isDarkTheme.value
             ) {
                 val navController = rememberAnimatedNavController()
-                NavGraph(navController)
+                NavGraph(
+                    navController =  navController,
+                    application = application
+                )
             }
         }
     }

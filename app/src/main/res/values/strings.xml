@@ -1,6 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Recommendaily</string>
     <string name="dont_know">Don\'t know</string>
     <string name="like">Like</string>
     <string name="dislike">Dislike</string>
+    <string name="settings">Settings</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="recommendations_for_you">Recommendations for you</string>
 </resources>

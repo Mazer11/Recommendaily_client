@@ -1,8 +1,6 @@
 package com.recommendaily.client.ui.theme
 
-import android.hardware.lights.Light
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext

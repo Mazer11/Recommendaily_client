@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
 import com.recommendaily.client.R
@@ -91,7 +92,7 @@ fun RecommendationAlertDialog(
                 onRated(DragResult.LIKES)
                 onDismissRequest()
             }) {
-                Text(text = "Like")
+                Text(text = stringResource(id = R.string.like))
             }
         },
         dismissButton = {
@@ -99,7 +100,7 @@ fun RecommendationAlertDialog(
                 onRated(DragResult.DISLIKES)
                 onDismissRequest()
             }) {
-                Text(text = "Dislike")
+                Text(text = stringResource(id = R.string.dislike))
             }
         },
         onDismissRequest = { onDismissRequest() }

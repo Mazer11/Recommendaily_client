@@ -1,10 +1,8 @@
 package com.recommendaily.client.ui.cardscreen
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -27,7 +25,6 @@ fun CardScreen(
 ) {
     val cards = vm.cardData.value
     val idCardToHide = remember { mutableStateListOf<Int>() }
-
     vm.setCardNumberCounterToZero()
 
 
@@ -64,10 +61,7 @@ fun CardScreen(
                         index = index,
                         idToHide = idCardToHide.toList(),
                         onSwiped = { swipeResult, data ->
-                            Log.d("onSwipe", "Yes")
-
                             vm.findCurrentCardNumber()
-
                             data.swipeResult = swipeResult
                             vm.memorizeSwipeResult(dataToMemorize = data)
                         },
@@ -81,9 +75,6 @@ fun CardScreen(
             ExtendedFloatingActionButton(
                 onClick = {
                     idCardToHide.add(vm.currentCardId)
-                    Log.d("currentCardId", "idCardToHide size: "
-                            + idCardToHide.size.toString())
-                    Log.d("currentCardId", "Card id: ${vm.currentCardId}")
                     vm.currentCardId -= 1
                 },
                 modifier = Modifier
