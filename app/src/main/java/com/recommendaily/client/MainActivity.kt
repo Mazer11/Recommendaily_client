@@ -4,7 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.recommendaily.client.repository.DataStoreRepository
 import com.recommendaily.client.ui.navigation.NavGraph
 import com.recommendaily.client.ui.theme.Recommendailytheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,6 +24,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            val context = LocalContext.current
+            val datastore = DataStoreRepository(context)
+
+            val themeValue = datastore.readFromDataStore.collectAsState(initial = false)
+            application.getAppThemeFromDataStore(themeValue.value)
+
             Recommendailytheme(
                 useDarkTheme = application.isDarkTheme.value
             ) {
