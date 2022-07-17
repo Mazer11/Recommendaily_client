@@ -1,5 +1,6 @@
 package com.recommendaily.client.ui.cardscreen
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -23,10 +24,9 @@ fun CardScreen(
     navController: NavController,
     vm: CardScreenVM
 ) {
-    val cards = vm.cardData.value
     val idCardToHide = remember { mutableStateListOf<Int>() }
     vm.setCardNumberCounterToZero()
-
+    val cData = remember { mutableStateOf(vm.cardData.value) }
 
 //    val isUrlsLoaded = remember { mutableStateOf(false) }
 //    val imageUrls = remember { mutableStateListOf<String>() }
@@ -54,28 +54,60 @@ fun CardScreen(
 
             UnderCardArrows()
 
-            Box {
-                cards.forEachIndexed { index, card ->
-                    DraggableCard(
-                        data = card,
-                        index = index,
-                        idToHide = idCardToHide.toList(),
-                        onSwiped = { swipeResult, data ->
-                            vm.findCurrentCardNumber()
-                            data.swipeResult = swipeResult
-                            vm.memorizeSwipeResult(dataToMemorize = data)
-                        },
-                    ) {
-                        CardContent(data = card)
+            val recomposition = remember { mutableStateOf(false) }
+
+            if (recomposition.value)
+                Box {
+                    cData.value.forEachIndexed { index, card ->
+                        DraggableCard(
+                            data = card,
+                            index = index,
+                            idToHide = idCardToHide.toList(),
+                            onSwiped = { swipeResult, data ->
+                                data.swipeResult = swipeResult
+                                vm.memorizeSwipeResult(dataToMemorize = data)
+                                vm.setCounterOrLoadNewCards(
+                                    idCardToHide,
+                                    recomposition
+                                )
+                            },
+                        ) {
+                            CardContent(data = card)
+                        }
                     }
                 }
-            }
+            else
+                Box {
+                    cData.value.forEachIndexed { index, card ->
+                        DraggableCard(
+                            data = card,
+                            index = index,
+                            idToHide = idCardToHide.toList(),
+                            onSwiped = { swipeResult, data ->
+                                data.swipeResult = swipeResult
+                                vm.memorizeSwipeResult(dataToMemorize = data)
+                                vm.setCounterOrLoadNewCards(
+                                    idCardToHide,
+                                    recomposition
+                                )
+                            },
+                        ) {
+                            CardContent(data = card)
+                        }
+                    }
+                }
 
             //Footer Button
             ExtendedFloatingActionButton(
                 onClick = {
                     idCardToHide.add(vm.currentCardId)
                     vm.currentCardId -= 1
+                    Log.d("Testing", idCardToHide.size.toString())
+                    vm.setCounterOrLoadNewCards(
+                        idCardToHide,
+                        recomposition
+                    )
+                    Log.d("Testing", idCardToHide.size.toString())
                 },
                 modifier = Modifier
                     .padding(top = 16.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)

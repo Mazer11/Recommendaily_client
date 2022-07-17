@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
             val context = LocalContext.current
             val datastore = DataStoreRepository(context)
 
-            val themeValue = datastore.readFromDataStore.collectAsState(initial = false)
+            val themeValue = datastore.readFromDataStore.collectAsState(initial = isSystemInDarkTheme())
             application.getAppThemeFromDataStore(themeValue.value)
 
             Recommendailytheme(

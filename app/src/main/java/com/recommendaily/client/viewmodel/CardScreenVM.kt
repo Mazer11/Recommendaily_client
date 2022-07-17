@@ -1,9 +1,6 @@
 package com.recommendaily.client.viewmodel
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.*
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.storage.FirebaseStorage
 import com.recommendaily.client.model.CardData
@@ -165,18 +162,35 @@ class CardScreenVM : ViewModel() {
         }
     }
 
-    fun findCurrentCardNumber() {
-        if (currentCardId > 0)
+    /**
+     * Finds number of current card on screen.
+     * It used to hide the top card on screen.
+     */
+    fun setCounterOrLoadNewCards(
+        hidden: MutableList<Int>,
+        recomposeValue: MutableState<Boolean>
+    ) {
+        if (currentCardId >= 0) {
             if (counter != swipedCardData.size) {
                 currentCardId -= swipedCardData.size - counter
                 counter = swipedCardData.size
             }
+        } else {
+            cardData.value.clear()
+            cardData.value = provideCardInfo()
+            setCardNumberCounterToZero()
+            hidden.clear()
+            recomposeValue.value = !recomposeValue.value
+        }
     }
 
-    fun setCardNumberCounterToZero(){
+    /**
+     * Nulls the counters that used to find number of top card.
+     */
+    fun setCardNumberCounterToZero() {
         counter = 0
         currentCardId = 8
-        swipedCardData.removeAll(swipedCardData)
+        swipedCardData.clear()
     }
 
 //    fun downloadImageUrls(data: List<CardData>, callBack: DownloadImagesUrlsCallback) {
