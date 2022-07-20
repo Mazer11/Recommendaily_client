@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.recommendaily.client.repository.DataStoreRepository
 import com.recommendaily.client.ui.navigation.NavGraph
+import com.recommendaily.client.ui.settings.ChangeLocale
 import com.recommendaily.client.ui.theme.Recommendailytheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -28,12 +29,15 @@ class MainActivity : ComponentActivity() {
             val context = LocalContext.current
             val datastore = DataStoreRepository(context)
 
-            val themeValue = datastore.readFromDataStore.collectAsState(initial = isSystemInDarkTheme())
+            val themeValue = datastore.readThemeFromDataStore.collectAsState(initial = isSystemInDarkTheme())
             application.getAppThemeFromDataStore(themeValue.value)
+            val appLocale = datastore.readLocaleFromDataStore.collectAsState(initial = "en")
 
             Recommendailytheme(
                 useDarkTheme = application.isDarkTheme.value
             ) {
+                ChangeLocale(lang = appLocale.value)
+
                 val navController = rememberAnimatedNavController()
                 NavGraph(
                     navController =  navController,

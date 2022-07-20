@@ -18,5 +18,4 @@ class RecommendailyApp: Application() {
     fun switchAppTheme(){
         isDarkTheme.value = !isDarkTheme.value
     }
-
 }
